@@ -161,31 +161,17 @@ Este documento apresenta o processo de configuração de um cluster Beowulf em u
 ### 7. Execução de um Programa de Exemplo
 
 1. **Programa MPI em C**:
-   - Criei um arquivo `hello.c` no diretório `/home/mpiuser`:
+   - Criei um arquivo `primos_mpi_parallel.c` no diretório `/home/mpiuser`:
      ```c
-     #include <mpi.h>
-     #include <stdio.h>
-
-     int main(int argc, char** argv) {
-         MPI_Init(NULL, NULL);
-         int world_size, world_rank;
-         MPI_Comm_size(MPI_COMM_WORLD, &world_size);
-         MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-         char processor_name[MPI_MAX_PROCESSOR_NAME];
-         int name_len;
-         MPI_Get_processor_name(processor_name, &name_len);
-         printf("Hello world from processor %s, rank %d out of %d processors\n",
-                processor_name, world_rank, world_size);
-         MPI_Finalize();
-     }
+     nano primos_mpi_parallel.c
      ```
    - Compilei o programa:
      ```bash
-     mpicc -o hello hello.c
+     mpicc primos_mpi_parallel.c -o primos_mpi_parallel
      ```
    - Executei o programa no cluster:
      ```bash
-     mpirun -np 8 --hostfile hosts hello
+     mpirun -np 8 --hostfile hosts ./primos_mpi_parallel
      ```
 
 ## Conclusão
