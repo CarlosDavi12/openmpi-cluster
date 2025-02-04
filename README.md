@@ -158,7 +158,7 @@ Este documento apresenta o processo de configuração de um cluster Beowulf em u
      export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
      ```
 
-### 7. Execução de um Programa de Exemplo
+### 7. Execução de um Programa
 
 1. **Programa MPI em C**:
    - Criei um arquivo `primos_mpi_parallel.c` no diretório `/home/mpiuser`:
