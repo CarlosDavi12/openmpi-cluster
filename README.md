@@ -161,18 +161,54 @@ Este documento apresenta o processo de configuração de um cluster Beowulf em u
 ### 7. Execução de um Programa
 
 1. **Programa MPI em C**:
-   - Criei um arquivo `primos_mpi_parallel.c` no diretório `/home/mpiuser`:
+   - Crie um arquivo `primos_mpi_parallel.c` no diretório `/home/mpiuser`:
      ```c
      nano primos_mpi_parallel.c
      ```
-   - Compilei o programa:
+   - Compile o programa:
      ```bash
      mpicc primos_mpi_parallel.c -o primos_mpi_parallel
      ```
-   - Executei o programa no cluster:
+   - Execute o programa no cluster:
      ```bash
      mpirun -np 8 --hostfile hosts ./primos_mpi_parallel
      ```
+
+### 8. Detalhes do Programa `primos_mpi_parallel.c`
+
+O programa `primos_mpi_parallel.c` conta números primos de forma paralela utilizando MPI. Ele divide o trabalho entre os processos e reduz os resultados para obter a contagem total de primos.
+
+#### Funcionamento
+
+1. **Inicialização do MPI**  
+   - O programa inicia o ambiente MPI com `MPI_Init()`.  
+   - Obtém o número total de processos com `MPI_Comm_size()` e o identificador único de cada processo com `MPI_Comm_rank()`.  
+
+2. **Configuração dos Limites**  
+   - O processo mestre (`id_processo == 0`) define o limite inicial, o limite máximo e o fator de crescimento da busca por primos.  
+
+3. **Execução Paralela**  
+   - O limite atual é transmitido para todos os processos com `MPI_Bcast()`.  
+   - Cada processo calcula a quantidade de números primos dentro do intervalo, distribuindo a carga de trabalho.  
+   - O processo mestre inicia a contagem de tempo usando `MPI_Wtime()`.  
+
+4. **Contagem de Primos**  
+   - Cada processo verifica se os números atribuídos a ele são primos. Isso é feito percorrendo os números e verificando divisibilidade.  
+   - Os resultados parciais são enviados ao processo mestre com `MPI_Reduce()`, que soma todas as contagens.  
+
+5. **Saída de Dados**  
+   - O processo mestre exibe os resultados no formato:  
+     ```
+         N        Pi          Tempo
+     -----------------------------------
+       1.000    168    0.000123
+       2.000    304    0.000245
+     ```
+   - A contagem continua até atingir o limite máximo.  
+
+6. **Finalização**  
+   - O ambiente MPI é encerrado com `MPI_Finalize()`.  
+   - O processo mestre exibe uma mensagem de conclusão.  
 
 ## Conclusão
 
